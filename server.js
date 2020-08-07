@@ -7,7 +7,7 @@ app.get('/', function(req, res){
 });
 app.use('/client/',express.static(__dirname + '/client/'));
 //below is port number
-serv.listen(2000);
+serv.listen(80);
 console.log("server started")
 
 var Player = function(code){
