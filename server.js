@@ -154,7 +154,7 @@ io.on('connection', function(socket){
 	var game;
 
 	socket.on('disconnect', function(){
-		var roomcode = socket.currentroom;
+		var roomcode = player.currentroom;
 		delete SOCKET_LIST[socket.code];
 		delete PLAYER_LIST[socket.code];
 		if(player.code == roomcode){
