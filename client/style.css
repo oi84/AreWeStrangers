@@ -1,0 +1,140 @@
+#title {
+	font-family: 'Indie Flower', cursive;
+	font-size: 55px;
+	color: white;
+	padding-top: 3%;
+	padding-left: 5%;
+}
+
+#header{
+	padding-left: 5%;
+}
+
+#body{
+	padding-top: 5%;
+	padding-left: 5%;
+}
+
+#footer{
+	padding-top: 7%;
+	padding-left: 5%;
+}
+
+#aboutbutton{
+	display: inline-block; 
+	margin-right: 10px;
+}
+
+#howtoplaybutton{
+	display:inline-block;
+}
+
+#footer{
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+	color: #ECD3D2;
+	padding-top: 15%;
+}
+
+body{
+	background-color: #962E29;
+}
+
+.button{
+	margin-top: 3px;
+	margin-bottom: 3px;
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+	color: #EB1000;
+	background-color: white;
+	border: 2px solid;
+	border-color: #EE6258;
+	font-weight: bold;
+}
+
+#big{
+	font-family: 'Raleway', sans-serif;
+	font-size: 40px;
+	font-weight: bold;
+	color:white;
+}
+
+#main{
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+	color:white;
+}
+
+#create{
+	margin-bottom: 20px;
+}
+
+#head1{
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+	color: #B80B00;
+}
+
+#text{
+	width: 50%;
+	font-family: 'Open Sans', sans-serif;
+	color: black;
+	font-size: 15px;
+	line-height: 1.5;
+	background-color: white;
+}
+
+#link{
+	text-decoration: none;
+	font-weight: bold;
+	color: #EE6258;
+}
+
+.textbox{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 20px;
+}
+
+.lobbybig{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 25px;
+	color: #ECD3D2;
+	margin-top: 10px;
+}
+
+.lobbysmall{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 20px;
+	color: white;
+	margin-top: 2px;
+}
+
+.gamebig{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 35px;
+	color: #ECD3D2;
+	margin-top: 10px;
+}
+.gamesmall{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 25px;
+	color: white;
+	margin-top: 10px;
+}
+
+.endtext{
+	font-family: 'Open Sans', sans-serif;
+	color: white;
+	font-size: 18px;
+	line-height: 1.5;
+	margin-top: 3px;
+
+}
+
+.messagetext{
+	width: 50%;
+	font-family: 'Open Sans', sans-serif;
+	color: #ECD3D2;
+	font-size: 25px;
+	line-height: 1.5;
+}

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/client/style.css">
+    <title>Are We Strangers?</title>
+</head>
+<body>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script>
+   
+    var socket = io();
+       
+    function CreateRoom(){
+        var x = document.getElementById("createfname").value;
+        if(!x || x == ""){
+            alert("Enter your name!");
+            return false;
+        }
+        else{
+            socket.emit('createroomjs',{
+                name: x
+            });
+        }
+	}
+
+    function JoinRoom(){
+        var x = document.getElementById("joinfname").value;
+        var y = document.getElementById("joincode").value;
+        if(!x || x === ""){
+            alert("Enter your name!");
+            return false;
+        }
+        if(!y || y === ""){
+            alert("Enter room code!");
+            return false;
+        }
+        else{
+            socket.emit('joinRoom',{
+                name: x,
+                code: y
+           });
+        }
+    }
+
+    socket.on('noroom', function(){
+        alert("Room code doesn't exist!");
+    });
+
+    socket.on('full', function(){
+        alert("Room is full!");
+    });
+
+	socket.on('createlobby', function(data){
+        document.getElementById("start").style.display = 'none';
+        document.getElementById("lobby").style.display = 'block';
+        document.getElementById("roomcode").innerHTML = data.code;
+        document.getElementById("players").innerHTML += data.name + " ";
+    });
+
+    socket.on('createstartbutton', function(data){
+        var strings = document.getElementById("players").innerHTML;
+        var stringarr = strings.split(" ");
+        document.getElementById("players").innerHTML = stringarr[0] + " " + data.name;
+        document.getElementById("startbutton").style.display = 'block';
+    });
+
+    function StartGame(){
+        var x = document.getElementById("roomcode").innerHTML;
+        socket.emit('startGame',{
+            id: x
+        });
+    }
+
+    socket.on('creategame', function(data){
+        document.getElementById("question").style.display = 'block';
+        document.getElementById("lobby").style.display = 'none';
+        document.getElementById("game").style.display = 'block';
+        document.getElementById("level").innerHTML = data.level;
+        document.getElementById("question").innerHTML = data.question;
+        document.getElementById("number").innerHTML = data.counter;
+        document.getElementById("nextbutton").innerHTML = data.button;
+        document.getElementById("nextquestion").style.display = 'block';
+    });
+
+    socket.on('createforother', function(data){
+        document.getElementById("question").style.display = 'none';
+        document.getElementById("nextquestion").style.display = 'none';
+        document.getElementById("lobby").style.display = 'none';
+        document.getElementById("game").style.display = 'block';
+        document.getElementById("level").innerHTML = data.level;
+        document.getElementById("question").innerHTML = data.question;
+        document.getElementById("number").innerHTML = data.counter;
+    });
+
+    socket.on('creategamestart', function(data){
+        document.getElementById("question").style.display = 'block';
+        document.getElementById("lobby").style.display = 'none';
+        document.getElementById("game").style.display = 'block';
+        document.getElementById("level").innerHTML = data.level;
+        document.getElementById("question").innerHTML = data.question;
+        document.getElementById("number").innerHTML = data.counter;
+        document.getElementById("nextbutton").innerHTML = data.button;
+        document.getElementById("nextquestion").style.display = 'block';
+        document.getElementById("hiddencode").innerHTML = data.code;
+    });
+
+    socket.on('createforotherstart', function(data){
+        document.getElementById("question").style.display = 'none';
+        document.getElementById("nextquestion").style.display = 'none';
+        document.getElementById("lobby").style.display = 'none';
+        document.getElementById("game").style.display = 'block';
+        document.getElementById("level").innerHTML = data.level;
+        document.getElementById("question").innerHTML = data.question;
+        document.getElementById("number").innerHTML = data.counter;
+        document.getElementById("hiddencode").innerHTML = data.code;
+    });
+
+
+    function NextQuestion(){
+        var x = document.getElementById("hiddencode").innerHTML;
+        socket.emit('next',{
+            code: x,
+        });
+    };
+
+    socket.on('end', function(data){
+        document.getElementById('game').style.display = 'none';
+        document.getElementById('end').style.display = 'block';
+        document.getElementById('sendcode').innerHTML = data.code;
+    });
+
+    function ReturnLobby(){
+        socket.emit('deletegame');
+    };
+
+    socket.on('home',function(){
+        document.getElementById('start').style.display = 'block';
+        document.getElementById('end').style.display = 'none';
+        document.getElementById('message').innerHTML = "";
+        
+    });
+
+    function SendMessage(){
+        var x = document.getElementById("letter").value;
+        var y = document.getElementById("sendcode").innerHTML;
+        if(x == "" || !x){
+            alert("Message is blank!");
+            return false;
+        }
+        else{
+            socket.emit('send', {
+                message: x,
+                code: y,
+            });
+        }
+    };
+
+    socket.on('receivemessage', function(data){
+        var array = data.message.split(/\r?\n/);
+        var string = "";
+        for(var i = 0; i < array.length; i++){
+            string += array[i];
+            string += "<br>";
+        }
+        document.getElementById("message").innerHTML = string;
+        document.getElementById("getmessage").style.display = 'block';
+    });
+
+    function GetMessage(){
+        document.getElementById("message").style.display = 'block';
+    }
+
+    function About(){
+        document.getElementById("about").style.display = 'block';
+    }
+
+    function HowToPlay(){
+        document.getElementById("howtoplay").style.display = 'block';
+    }
+
+    function AboutReturn(){
+        document.getElementById("about").style.display = 'none';
+    }
+
+    function HowToPlayReturn(){
+        document.getElementById("howtoplay").style.display = 'none';
+    }
+
+    socket.on('interrupt', function(){
+        window.location.reload();
+        alert("Host has left the room!");
+    });
+
+    socket.on('interruptowner', function(){
+        var players = document.getElementById("players").innerHTML;
+        var substr = players.split(" ");
+        document.getElementById("players").innerHTML = substr[0];
+        document.getElementById("startbutton").style.display = 'none';
+    });
+
+</script>
+    <div id="title"><a href="." style="text-decoration: none; color: white;">Are We Strangers?</a></div>
+        <div id="header">
+            <div id="aboutbutton"><button class="button" onclick="About()">About</button></div>
+                <div id="howtoplaybutton"><button class="button" onclick="HowToPlay()">How to play</button></div>
+                <div id="about" style="display: none;">
+                    <div id="text">
+                        <div id="head1">About</div>
+                        <div>This is a non profit, fan made game based on <a id ="link" target="_blank" href="https://www.werenotreallystrangers.com/">We're Not Really Strangers (WNRS)</a>, a card game created by LA Artist and Model <a id="link" target="_blank" href="https://www.instagram.com/koreen/">Koreen</a>. As stated on their site, WNRS is a card game with the "intention of empowering meaningful connections with others."</div>
+                        <div>The COVID-19 epidemic made me recognize the importance of human connections and maintaining our relationships, so I thought it would be appropriate to create a web version of this game to remember that even when we're physically apart, we can still be together.</div>
+                        <div>If you enjoy this game and want to show support, please consider buying the physical copy of the game on their site, as playing it in person will provide a different intimate experience. </div>
+                        <div id="head1">About Me</div>
+                        <div>Hello, my name is Brian Kim.</div>
+                        <div>I'm a student at USC studying computer science (games), and chose to tackle this personal project during Summer of 2020.</div>
+                        <div>The front-end was built with HTML and CSS, and the back-end was built using Express and Node.js as the framework, Socket.io for managing players and rooms, and Javascript for gameplay.</div>
+                        <div>Are We Strangers is hosted on Amazon Web Services.</div>
+                        <div><a id="link" target="_blank" href="https://oi84.github.io">My Personal Website</a></div>
+                    </div>
+                    <div id="aboutreturn"><button class="button" onclick="AboutReturn()">Return</button></div>
+                </div>
+                <div id="howtoplay" style="display:none;">
+                    <div id="text">
+                        <div id="head1">How to play</div>
+                        <div>The rules of this game are simple. There are 2 players, and the game is divided into 3 levels.</div>
+                        <div>Each level there are a deck of random questions. Each turn, one player will receive a card and ask that question to another player, and players will alternate until they have finished the round. When the final round finishes, there will be one more task that you will have to do (which I will keep secret), and after that you have finished the game.</div>
+                        <div>This is a game of building relationships through conversation, and as a result, honesty is an important aspect of the game.</div>
+                    </div>
+                    <div id="howtoplayreturn"><button class="button" onclick="HowToPlayReturn()">Return</button></div>
+                </div>
+        </div>
+    <div id="body">
+        <div id="start">
+            <div id="create">
+                <div id="big">Create Room</div>
+                <div id="main">Name: <input class="textbox" id="createfname">
+                <button class="button" onclick="CreateRoom()">Create Room</button></div>
+            </div>
+
+            <div id="join">
+                <div id="big">Join Room</div>
+                <div>
+                    <div id="main">Name: <input class="textbox" id="joinfname">
+                    Room Code: <input class="textbox" id="joincode">
+                    <button class="button" onclick="JoinRoom()">Join Room</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="lobby" style="display:none;">
+            <div id="big">Lobby</div>
+            <div class="lobbybig">Code (Share this with your friend!): </div>
+            <div class="lobbysmall" id="roomcode"></div>
+            <div class="lobbybig">Players: </div>
+            <div class="lobbysmall" id="players"></div>
+            <div id="startbutton" style="display:none;"><button class="button" onclick="StartGame()">Start Game</button></div>
+        </div>
+
+        <div id="game" style="display:none;">
+            <div id="level" class="gamebig"></div>
+            <div id="question" class="gamesmall"></div>
+            <div id="number" class="gamesmall"></div>
+            <div style="margin-top: 10px" id="nextquestion"><button id="nextbutton" class="button" onclick="NextQuestion()"></button></div>
+            <div id="hiddencode" style="display:none;"></div>
+        </div>
+
+        <div id="end" style="display:none;">
+            <div class="endtext">Congratulations, you have finished the main game of Are We Strangers.</div>
+            <div class="endtext">Before we end, however, there is one last task for each of you.</div> 
+            <div class="endtext">Write a letter to each other.</div> 
+            <div class="endtext">When done, send it to each other, and only read it once both of you have left each other.</div>
+            <textarea id="letter" class="textbox" style="background-color: #ECD3D2;" cols="85" rows="12"></textarea>
+            <div class="endtext">Thank you for playing! I hope that this game is the seeds of your blooming relationship with each other.</div>
+            <div id="endbutton"><button class="button" onclick="SendMessage()">Send Letter</button></div>
+            <div id="getmessage" class="endtext" style="display:none;">You received a letter! <button class="button" onclick="GetMessage()">Read Letter</button></div>
+            <div id="message" class="messagetext" style="display:none;"></div>
+            <div id="sendcode" style="display:none;"></div>
+        </div>
+    </div>
+    <div id="footer"> Created by Brian Kim.</div>
+</body>
+</html>
