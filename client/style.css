@@ -138,3 +138,12 @@ body{
 	font-size: 25px;
 	line-height: 1.5;
 }
+
+#endbutton{
+	display: inline-block; 
+	margin-right: 10px;
+}
+
+#sentdaletter{
+	display: inline-block;
+}

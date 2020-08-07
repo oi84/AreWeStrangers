@@ -151,6 +151,7 @@
             return false;
         }
         else{
+            document.getElementById("sentdaletter").style.display = 'block';
             socket.emit('send', {
                 message: x,
                 code: y,
@@ -190,6 +191,7 @@
     }
 
     socket.on('interrupt', function(){
+        console.log('interrupt');
         window.location.reload();
         alert("Host has left the room!");
     });
@@ -275,6 +277,7 @@
             <textarea id="letter" class="textbox" style="background-color: #ECD3D2;" cols="85" rows="12"></textarea>
             <div class="endtext">Thank you for playing! I hope that this game is the seeds of your blooming relationship with each other.</div>
             <div id="endbutton"><button class="button" onclick="SendMessage()">Send Letter</button></div>
+            <div id="sentdaletter" class="endtext" style="display:none;">Sent!</div>
             <div id="getmessage" class="endtext" style="display:none;">You received a letter! <button class="button" onclick="GetMessage()">Read Letter</button></div>
             <div id="message" class="messagetext" style="display:none;"></div>
             <div id="sendcode" style="display:none;"></div>
